@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  nginx:
+    image: linuxserver/nginx
+    container_name: mkdocsmat-nginx
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Seoul
+    volumes:
+      - /opt/docker/mkdocsmat-nginx:/config
+    ports:
+      - 8888:80
+    networks:
+      - mkdocsmaterial
+    restart: unless-stopped
+  mkdocsmaterial:
+    image: squidfunk/mkdocs-material
+    container_name: mkdocsmat-mkdocsmat
+    volumes:
+      - /opt/docker/mkdocsmat-nginx/mkdocsmat:/docs
+    networks:
+      - mkdocsmaterial
+    depends_on:
+      - nginx
+    restart: unless-stopped
+
+networks:
+    mkdocsmaterial:
